@@ -2,151 +2,120 @@ def preparar_texto(texto):
     """
     Remove espaços e transforma o texto para letras minúsculas.
     """
-    # Substitui espaços por nada e transforma todas as letras para minúsculas
-    # Isso padroniza o texto para facilitar a criptografia e descriptografia
-    return texto.replace(" ", "").lower()
+    return texto.lower()
 
 def gerar_chave(texto, chave):
     """
     Gera uma chave repetida até o tamanho do texto.
     """
-    # Transforma a chave em uma lista de caracteres para facilitar a manipulação
     chave = list(chave)
-    
-    # Se a chave já tiver o mesmo tamanho do texto, não há necessidade de alteração
     if len(chave) == len(texto):
-        # Retorna a chave como string ao invés de uma lista
-        return "".join(chave)
+        return [ord(c) - ord('a') for c in chave]
     else:
-        # Se a chave for menor, ela é repetida até alcançar o tamanho do texto
         for i in range(len(texto) - len(chave)):
-            # Utiliza o operador % para repetir os caracteres da chave original
             chave.append(chave[i % len(chave)])
-    # Junta os caracteres da lista de volta em uma string e retorna a chave ajustada
-    return "".join(chave)
+    return [ord(c) - ord('a') for c in chave]
 
-def criptografar(texto, chave):
+def criptografar(texto, chave, alfabeto):
     """
-    Realiza a criptografia usando a cifra de Vigenère.
+    Realiza a criptografia usando a cifra de Vigenère, mantendo números e caracteres especiais inalterados.
     """
-    # Lista que armazenará o texto criptografado
-    texto_convertido = []
+    texto_convertido = ""
+    tamanho = len(alfabeto)
     
-    # Itera sobre cada caractere do texto
-    for i in range(len(texto)):
-        # Calcula o novo índice da letra com base no valor ASCII do texto e da chave
-        # Faz o cálculo de deslocamento com base no alfabeto (mod 26)
-        x = (ord(texto[i]) + ord(chave[i])) % 26
-        
-        # Adiciona o valor ASCII de 'a' para obter a letra correta no alfabeto
-        x += ord('a')
-        
-        # Converte o valor numérico para a letra correspondente e adiciona ao texto criptografado
-        texto_convertido.append(chr(x))
+    for i, letra in enumerate(texto):
+        if letra in alfabeto:
+            # Obtém o índice da letra no alfabeto
+            ind_o = alfabeto.index(letra)
+            # Calcula o novo índice somando a chave (criptografia)
+            ind_novo = (ind_o + chave[i % len(chave)]) % tamanho
+            # Adiciona a letra correspondente ao novo índice
+            texto_convertido += alfabeto[ind_novo]
+        else:
+            # Mantém o caractere original se não estiver no alfabeto (números, espaços, etc.)
+            texto_convertido += letra
     
-    # Junta os caracteres convertidos em uma string e retorna o texto criptografado
-    return "".join(texto_convertido)
+    return texto_convertido
 
-def descriptografar(texto, chave):
+def descriptografar(texto, chave, alfabeto):
     """
-    Realiza a descriptografia usando a cifra de Vigenère.
+    Realiza a descriptografia usando a cifra de Vigenère, mantendo números e caracteres especiais inalterados.
     """
-    # Lista que armazenará o texto descriptografado
-    texto_convertido = []
+    texto_convertido = ""
+    tamanho = len(alfabeto)
     
-    # Itera sobre cada caractere do texto
-    for i in range(len(texto)):
-        # Faz o cálculo de inversão da criptografia subtraindo o valor da chave
-        # Adiciona 26 para garantir que o índice seja positivo, em seguida faz mod 26
-        x = (ord(texto[i]) - ord(chave[i]) + 26) % 26
-        
-        # Adiciona o valor ASCII de 'a' para obter a letra correta no alfabeto
-        x += ord('a')
-        
-        # Converte o valor numérico para a letra correspondente e adiciona ao texto descriptografado
-        texto_convertido.append(chr(x))
+    for i, letra in enumerate(texto):
+        if letra in alfabeto:
+            # Obtém o índice da letra no alfabeto
+            ind_o = alfabeto.index(letra)
+            # Calcula o novo índice subtraindo a chave (descriptografia)
+            ind_novo = (ind_o - chave[i % len(chave)]) % tamanho
+            # Ajusta o índice se for negativo (rotação inversa)
+            if ind_novo < 0:
+                ind_novo = tamanho + ind_novo
+            # Adiciona a letra correspondente ao novo índice
+            texto_convertido += alfabeto[ind_novo]
+        else:
+            # Mantém o caractere original se não estiver no alfabeto (números, espaços, etc.)
+            texto_convertido += letra
     
-    # Junta os caracteres convertidos em uma string e retorna o texto descriptografado
-    return "".join(texto_convertido)
+    return texto_convertido
 
 def menu():
     """
     Exibe o menu de opções e permite ao usuário criptografar, descriptografar ou sair.
     """
-    # Laço infinito para manter o menu ativo até o usuário decidir sair
+    alfabeto = "abcdefghijklmnopqrstuvwxyz"
+    
     while True:
-        # Exibe o menu de opções
         print("\n*** Menu Cifra de Vigenère ***")
         print("1. Criptografar Texto")
         print("2. Descriptografar Texto")
         print("3. Sair")
         
-        # Tenta ler a entrada do usuário e converter para um número inteiro
+        # Solicita a escolha do usuário e trata possíveis erros de entrada
         try:
             opcao = int(input("Escolha uma opção (1-3): "))
         except ValueError:
-            # Se o usuário inserir algo que não seja número, exibe erro e reinicia o laço
             print("Entrada inválida. Por favor, insira um número entre 1 e 3.")
             continue  # Volta ao início do laço, solicitando nova entrada
 
-        # Se o usuário escolher a opção de criptografar (1)
         if opcao == 1:
-            # Solicita o texto e a chave
-            texto = input("Digite o texto para criptografar (somente letras): ")
+            texto = input("Digite o texto para criptografar: ")
             chave = input("Digite a chave para criptografia (somente letras): ")
 
-            # Verifica se o texto e a chave contêm apenas letras (sem números ou símbolos)
-            if not texto.isalpha() or not chave.isalpha():
-                print("Erro: o texto e a chave devem conter apenas letras.")
+            # Verifica se a chave contém apenas letras
+            if not chave.isalpha():
+                print("Erro: a chave deve conter apenas letras.")
                 continue  # Volta ao início do laço
 
-            # Prepara o texto e a chave, removendo espaços e convertendo para minúsculas
             texto = preparar_texto(texto)
             chave = preparar_texto(chave)
-            
-            # Gera uma chave do mesmo tamanho que o texto
             chave_ajustada = gerar_chave(texto, chave)
-            
-            # Criptografa o texto com a chave ajustada
-            texto_criptografado = criptografar(texto, chave_ajustada)
-            
-            # Exibe o texto criptografado
+            texto_criptografado = criptografar(texto, chave_ajustada, alfabeto)
             print(f"Texto criptografado: {texto_criptografado}")
 
-        # Se o usuário escolher a opção de descriptografar (2)
         elif opcao == 2:
-            # Solicita o texto e a chave
-            texto = input("Digite o texto para descriptografar (somente letras): ")
+            texto = input("Digite o texto para descriptografar: ")
             chave = input("Digite a chave para descriptografia (somente letras): ")
 
-            # Verifica se o texto e a chave contêm apenas letras
-            if not texto.isalpha() or not chave.isalpha():
-                print("Erro: o texto e a chave devem conter apenas letras.")
+            # Verifica se a chave contém apenas letras
+            if not chave.isalpha():
+                print("Erro: a chave deve conter apenas letras.")
                 continue  # Volta ao início do laço
 
-            # Prepara o texto e a chave, removendo espaços e convertendo para minúsculas
             texto = preparar_texto(texto)
             chave = preparar_texto(chave)
-            
-            # Gera uma chave do mesmo tamanho que o texto
             chave_ajustada = gerar_chave(texto, chave)
-            
-            # Descriptografa o texto com a chave ajustada
-            texto_descriptografado = descriptografar(texto, chave_ajustada)
-            
-            # Exibe o texto descriptografado
+            texto_descriptografado = descriptografar(texto, chave_ajustada, alfabeto)
             print(f"Texto descriptografado: {texto_descriptografado}")
 
-        # Se o usuário escolher a opção de sair (3)
         elif opcao == 3:
-            # Exibe uma mensagem e encerra o programa
             print("Encerrando o programa...")
-            break  # Sai do laço, encerrando o menu
+            break  # Encerra o laço e sai do programa
 
-        # Se o usuário digitar uma opção inválida
         else:
-            # Exibe uma mensagem de erro e volta ao início do laço
             print("Opção inválida. Por favor, escolha uma opção entre 1 e 3.")
 
-# Inicia o menu e, portanto, o programa
+# Chama o menu para iniciar o programa
 menu()
