@@ -1,5 +1,3 @@
-import string  # Importa o módulo string que contém o alfabeto.
-
 def preparar_texto(texto):
     """
     Remove caracteres não alfabéticos e transforma o texto para letras minúsculas.
@@ -67,7 +65,7 @@ def menu():
     """
     Exibe o menu e permite ao usuário criptografar, descriptografar ou sair.
     """
-    alfabeto = string.ascii_lowercase  # Define o alfabeto como as letras minúsculas.
+    alfabeto = 'abcdefghijklmnopqrstuvwxyz'  # Define o alfabeto manualmente como as letras minúsculas.
 
     # Laço principal do menu.
     while True:
