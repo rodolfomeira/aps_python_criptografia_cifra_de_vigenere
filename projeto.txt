@@ -1,0 +1,45 @@
+Projeto (estrutura) do programa
+
+Como parte da APS (Atividades Práticas Supervisionadas), fomos designados a escolher uma técnica de criptografia, e decidimos explorar a Cifra de Vigenère. Desde o início, sabíamos que seria uma oportunidade desafiadora de aprendizado. A nossas principais dificuldades e lições que surgiram ao longo desse processo, sempre buscando informações em fontes como o w3schools, e explicando como cada etapa foi cuidadosamente pensada e implementada.
+
+
+1. Concepção Inicial: Escolha da Técnica de Criptografia e Abordagem Técnica 
+O primeiro passo foi com a escolha da Cifra de Vigenère, uma criptografia de substituição polialfabética que utiliza uma chave para modificar o texto original. Nosso primeiro passo foi estudar como a cifra funcionava e quais adaptações seriam necessárias para implementá-la no ambiente Python. Tivemos que pensar em cada detalhe: desde a forma de manipular strings até a criação de um sistema que validasse entradas e operasse com diferentes tamanhos de chave e texto.
+Inicialmente, pensamos que o processo de criptografia seria direto, envolvendo a substituição das letras de acordo com a chave fornecida. No entanto, logo percebemos que o projeto exigiria uma série de validações e controles que não eram triviais. Por exemplo, como garantir que o usuário fornecesse entradas válidas (texto e chave)? Como lidar com exceções e erros sem que o programa falhasse?
+Após uma pesquisa no w3schools, entendemos a necessidade de utilizar estruturas de controle e tratamento de erros que garantissem uma experiência de uso robusta e sem interrupções. Com isso em mente, começamos a planejar cada módulo do projeto, dividindo-o em partes menores para facilitar o desenvolvimento e o teste.
+
+
+2. Entrada de Dados: Validação e Controle
+Nosso primeiro grande desafio foi garantir que os dados fornecidos pelo usuário (tanto o texto a ser criptografado quanto a chave) fossem válidos e adequados para o processo de criptografia. Para isso, pensamos em utilizar estruturas de controle como if not e continue para realizar validações em tempo real e evitar que entradas inválidas passassem para a próxima etapa.
+Por exemplo, quando o usuário inseria a chave, precisávamos verificar se ela continha apenas letras, sem números ou símbolos. Foi aí que começamos a estudar o método isalpha() no w3schools, aprendendo como verificar rapidamente se uma string continha apenas caracteres alfabéticos. Decidimos então que, caso a chave fosse inválida, o programa retornaria um erro amigável e solicitaria ao usuário uma nova entrada, utilizando o continue dentro de um laço while para repetir o processo até que a chave correta fosse fornecida.
+O uso de if not foi fundamental para garantir que, caso o texto inserido fosse vazio, o programa não continuaria. Esta verificação simples, mas crucial, foi implementada para garantir que o fluxo do programa fosse interrompido antes que erros maiores surgissem. Mais uma vez, recorrendo ao w3schools, descobrimos que essa era a melhor forma de garantir a validação imediata de entradas.
+
+
+3. Menu de Opções: Interface Simples e Funcional
+Outro ponto que discutimos bastante foi a criação de um menu de opções simples e intuitivo, que permitisse ao usuário escolher entre criptografar, descriptografar ou sair do programa. Isso envolveu planejar uma interação fluida com o usuário, onde qualquer erro na escolha (como digitar letras em vez de números) seria tratado de maneira apropriada, sem causar interrupções.
+Aqui, encontramos o bloco try/except no w3schools, que se revelou uma solução poderosa para tratar esses erros. Implementamos o try para capturar a entrada do usuário e garantir que ela fosse convertida corretamente para um número. Caso o usuário inserisse algo inválido (por exemplo, uma letra em vez de um número), o programa capturava a exceção com o except ValueError as ve e exibia uma mensagem clara, pedindo ao usuário que fizesse uma nova escolha. Este tratamento de exceções foi um dos grandes aprendizados do projeto, pois inicialmente não tínhamos familiaridade com essa técnica.
+
+
+4. Cifra de Vigenère: Manipulação da Chave e Ciclagem
+Com as entradas devidamente validadas e o menu funcionando conforme o esperado, começamos a trabalhar na implementação da Cifra de Vigenère. O principal desafio aqui foi garantir que a chave fornecida pelo usuário fosse ciclada corretamente ao longo do texto.
+Ao estudar o funcionamento da cifra, percebemos que a chave precisa ser repetida tantas vezes quanto necessário para cobrir todo o texto. Para isso, utilizamos operações aritméticas modulares (%) para calcular o índice correto de cada letra da chave, garantindo que o programa não tentasse acessar uma posição fora do limite da chave. Este conceito foi aprofundado com a ajuda do w3schools, onde aprendemos como usar o operador % para "reciclar" a chave sem ultrapassar seu tamanho.
+Além disso, para cada letra do texto, precisávamos calcular o novo índice somando o deslocamento da chave ao valor numérico da letra original. O planejamento dessa parte exigiu bastante atenção, pois erros nos cálculos poderiam gerar textos criptografados incorretos. Foi durante essa fase que entendemos a importância de uma implementação modular e precisa para garantir que as letras ficassem dentro dos limites do alfabeto.
+
+
+5. Tratamento de Exceções: Garantindo a Estabilidade do Programa
+O uso de exceções (try e except) foi outro aspecto essencial no desenvolvimento do programa, especialmente na validação de dados e na interação com o usuário. Ao longo do projeto, percebemos que era fundamental capturar erros comuns, como inserção de números onde esperávamos letras, ou entradas vazias.
+Por exemplo, durante o processo de criptografia, usamos o bloco try para verificar se a chave fornecida pelo usuário era válida. Caso contrário, o programa capturava o erro com except ValueError e fornecia uma mensagem explicativa ao usuário, solicitando uma nova entrada. Esse cuidado foi importante para evitar que o programa travasse em situações de erro.
+Anteriormente, não tínhamos experiência com o uso de exceções e como elas poderiam tornar o código mais robusto. A pesquisa no w3schools nos ajudou a entender como isolar blocos de código propensos a falhas e tratá-los de maneira controlada, garantindo uma execução estável e sem interrupções inesperadas.
+
+
+6. Feedback e Melhorias: Iterações no Código
+Após implementar as funcionalidades principais, passamos a testar o programa em diferentes cenários, buscando entender como o usuário interagiria com o sistema. Durante esse processo, percebemos a importância de fornecer feedback constante ao usuário, principalmente ao solicitar entradas ou exibir os resultados da criptografia e descriptografia.
+Decidimos melhorar a interface textual do programa, adicionando mensagens claras para guiar o usuário em cada etapa. Isso incluiu desde avisos quando uma chave inválida era inserida até o resultado final do texto criptografado ou descriptografado. Essa melhoria na interação foi fruto de várias iterações no código, baseadas nos testes que realizamos e no feedback que obtivemos durante o processo de desenvolvimento.
+
+
+7. Aprendizados Principais
+Planejamento e Controle do Fluxo de Execução: Aprendemos que o planejamento adequado de cada etapa do código é fundamental para garantir um fluxo de execução controlado. O uso de if not e continue foi essencial para validar as entradas e garantir que o programa seguisse de maneira coerente, sem erros inesperados.
+Tratamento de Exceções: O uso de try e except foi um dos maiores aprendizados, permitindo capturar erros previsíveis e tratá-los de forma amigável ao usuário, sem interromper o funcionamento do programa.
+Manipulação de Dados e Validações: Entendemos a importância de garantir que os dados inseridos pelo usuário fossem adequados para o processo de criptografia. Isso envolveu uma série de validações em diferentes pontos do código para garantir a integridade das entradas e evitar falhas.
+Operações Modulares para Criptografia: Implementar operações modulares foi essencial para garantir a ciclagem correta da chave e o sucesso do algoritmo de criptografia, especialmente no caso da Cifra de Vigenère, onde o ciclo da chave deve ser contínuo.
+Interface e Experiência do Usuário: A construção de um menu interativo e a melhoria constante do feedback dado ao usuário foram fundamentais para garantir uma experiência fluida e intuitiva.
